@@ -6,6 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type header struct {
+	UserId string
+	Browser string
+}
+
+type personData struct {
+	FirstName string
+	LastName string
+}
 type TestHandler struct {
 
 }
@@ -58,3 +67,91 @@ func (h *TestHandler) AddUser (c *gin.Context) {
 	})
 }
 
+
+func (h *TestHandler) HeaderBinder1 (c *gin.Context) {
+	userId := c.GetHeader("UserId")
+	c.JSON(http.StatusOK, gin.H{
+		"result" : "HeaderBinder1",
+		"userId" : userId,
+	})
+}
+
+
+func (h *TestHandler) HeaderBinder2 (c *gin.Context) {
+	header := header{}
+	c.BindHeader(header)
+	c.JSON(http.StatusOK, gin.H{
+		"result" : "HeaderBinder2",
+		"header" : &header,
+	})
+}
+
+func (h *TestHandler) QueryBinder1 (c *gin.Context) {
+	id := c.Query("id")
+	name := c.Query("name")
+	c.JSON(http.StatusOK, gin.H{
+		"result" : "QueryBinder1",
+		"id" : id,
+		"name" : name,
+	})
+}
+
+
+func (h *TestHandler) QueryBinder2 (c *gin.Context) {
+	ids := c.QueryArray("id") //  ?id=12&name=test&id=19 => ids : [12, 19] , name=test
+	name := c.Query("name")
+	c.JSON(http.StatusOK, gin.H{
+		"result" : "QueryBinder2",
+		"id" : ids,
+		"name" : name,
+	})
+}
+
+
+
+func (h *TestHandler) UriBinder (c *gin.Context) {
+	ids := c.Param("id") 
+	name := c.Param("name")
+	c.JSON(http.StatusOK, gin.H{
+		"result" : "UriBinder",
+		"id" : ids,
+		"name" : name,
+	})
+}
+
+func (h *TestHandler) BodyBinder (c *gin.Context) {
+	p := personData{}
+	c.ShouldBindJSON(&p)
+	c.JSON(http.StatusOK, gin.H{
+		"result" : "BodyBinder",
+		"person" : p,
+	})
+}
+
+
+func (h *TestHandler) FormBinder (c *gin.Context) {
+	p := personData{}
+	c.Bind(&p)
+	c.JSON(http.StatusOK, gin.H{
+		"result" : "FormBinder",
+		"person" : p,
+	})
+}
+
+
+
+func (h *TestHandler) FileBinder (c *gin.Context) {
+	file , _ := c.FormFile("file")
+	err := c.SaveUploadedFile(file, "file")
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error" : err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"result" : "FileBinder",
+		"Filename" : file.Filename,
+	})
+}
+ 
