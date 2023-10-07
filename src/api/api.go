@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/atefeh-syf/car-sale/api/routers"
+	validation "github.com/atefeh-syf/car-sale/api/validations"
 	"github.com/atefeh-syf/car-sale/config"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
-	validation "github.com/naeemaei/golang-clean-web-api/api/validations"
 )
 
 func InitServer() {
