@@ -11,11 +11,12 @@ func TestMiddleware() gin.HandlerFunc {
 		apiKey := ctx.GetHeader("x-api-key")
 		if apiKey == "1" {
 			ctx.Next()
-			return
+		} else {
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error": "api key is required",
+			})
 		}
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"response": "api key is required",
-		})
+		
 		return
 	}
 }
