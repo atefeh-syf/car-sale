@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 
+	"github.com/atefeh-syf/car-sale/api/middlewares"
 	"github.com/atefeh-syf/car-sale/api/routers"
 	validation "github.com/atefeh-syf/car-sale/api/validations"
 	"github.com/atefeh-syf/car-sale/config"
@@ -21,7 +22,12 @@ func InitServer() {
 		val.RegisterValidation("mobile", validation.IranianMobileNumberValidator, true)
 	}
 
-	r.Use(gin.Logger(), gin.Recovery())
+	r.Use(
+		gin.Logger(), 
+		gin.Recovery(), 
+		//middlewares.TestMiddleware()
+		middlewares.LimitByRequest(),
+	)
 
 	api := r.Group("/api")
 
