@@ -13,36 +13,36 @@ type Config struct {
 	Server   ServerConfig
 	Postgres PostgresConfig
 	Redis    RedisConfig
-//	Password PasswordConfig
+	Password PasswordConfig
 	Cors     CorsConfig
 	Logger   LoggerConfig
-//	Otp      OtpConfig
-///	JWT      JWTConfig
+	Otp      OtpConfig
+	JWT      JWTConfig
 }
 
 type ServerConfig struct {
-	InternalPort    string
-	ExternalPort    string
-	RunMode string
+	InternalPort string
+	ExternalPort string
+	RunMode      string
 }
 
 type LoggerConfig struct {
 	FilePath string
 	Encoding string
 	Level    string
-//	Logger   string
+	//	Logger   string
 }
 
 type PostgresConfig struct {
-	Host            string
-	Port            string
-	User            string
-	Password        string
-	DbName          string
-	SSLMode         string
-//	MaxIdleConns    int
-//	MaxOpenConns    int
-//	ConnMaxLifetime time.Duration
+	Host     string
+	Port     string
+	User     string
+	Password string
+	DbName   string
+	SSLMode  string
+	//	MaxIdleConns    int
+	//	MaxOpenConns    int
+	//	ConnMaxLifetime time.Duration
 }
 
 type RedisConfig struct {
@@ -58,31 +58,31 @@ type RedisConfig struct {
 	PoolTimeout        time.Duration
 }
 
-// type PasswordConfig struct {
-// 	IncludeChars     bool
-// 	IncludeDigits    bool
-// 	MinLength        int
-// 	MaxLength        int
-// 	IncludeUppercase bool
-// 	IncludeLowercase bool
-// }
+type PasswordConfig struct {
+	IncludeChars     bool
+	IncludeDigits    bool
+	MinLength        int
+	MaxLength        int
+	IncludeUppercase bool
+	IncludeLowercase bool
+}
 
 type CorsConfig struct {
 	AllowOrigins string
 }
 
-// type OtpConfig struct {
-// 	ExpireTime time.Duration
-// 	Digits     int
-// 	Limiter    time.Duration
-// }
+type OtpConfig struct {
+	ExpireTime time.Duration
+	Digits     int
+	Limiter    time.Duration
+}
 
-// type JWTConfig struct {
-// 	AccessTokenExpireDuration  time.Duration
-// 	RefreshTokenExpireDuration time.Duration
-// 	Secret                     string
-// 	RefreshSecret              string
-// }
+type JWTConfig struct {
+	AccessTokenExpireDuration  time.Duration
+	RefreshTokenExpireDuration time.Duration
+	Secret                     string
+	RefreshSecret              string
+}
 
 func GetConfig() *Config {
 	cfgPath := getConfigPath(os.Getenv("APP_ENV"))
@@ -93,10 +93,10 @@ func GetConfig() *Config {
 
 	cfg, err := ParseConfig(v)
 	envPort := os.Getenv("PORT")
-	if envPort != ""{
+	if envPort != "" {
 		cfg.Server.ExternalPort = envPort
 		log.Printf("Set external port from environment -> %s", cfg.Server.ExternalPort)
-	}else{
+	} else {
 		cfg.Server.ExternalPort = cfg.Server.InternalPort
 		log.Printf("Set external port from environment -> %s", cfg.Server.ExternalPort)
 	}
@@ -122,7 +122,7 @@ func LoadConfig(filename string, fileType string) (*viper.Viper, error) {
 	v.SetConfigName(filename)
 	v.AddConfigPath(".")
 	v.AutomaticEnv()
- 
+
 	err := v.ReadInConfig()
 	if err != nil {
 		log.Printf("Unable to read config: %v", err)
@@ -142,4 +142,4 @@ func getConfigPath(env string) string {
 	} else {
 		return "../config/config-development"
 	}
-}	
+}
