@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/atefeh-syf/car-sale/api/helper"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,12 +17,12 @@ func NewHealthHandler() *HealthHandler {
 }
 
 func (h *HealthHandler) Health(c *gin.Context){
-	c.JSON(http.StatusOK, "Working!")
+	c.JSON(http.StatusOK,  helper.GenerateBaseResponse("working!", true, 0))
 	return
 }
 
 func (h *HealthHandler) HealthPost(c *gin.Context){
-	c.JSON(http.StatusOK, "Working post!")
+	c.JSON(http.StatusOK,   helper.GenerateBaseResponse("working! post", true, 0))
 	return
 }
 

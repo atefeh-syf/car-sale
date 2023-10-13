@@ -1,2 +1,39 @@
 package helper
+import (
+	validation "github.com/atefeh-syf/car-sale/api/validations"
+)
+type BaseHelperResponse struct {
+	Result any `json:"result"`
+	Success bool `json:"success"`
+	ResultCode int `json:"resultCode"`
+	ValidationErrors *[]validation.ValidationError `json:"validationErrors"`
+	Error any `json:"error"`
+}
 
+func GenerateBaseResponse(result any, success bool, resultCode int) *BaseHelperResponse {
+	return &BaseHelperResponse{
+		Result: result,
+		Success: success,
+		ResultCode: resultCode,
+	}
+}
+
+
+func GenerateBaseResponseWithError(result any, success bool, resultCode int, err error) *BaseHelperResponse {
+	return &BaseHelperResponse{
+		Result: result,
+		Success: success,
+		ResultCode: resultCode,
+		Error: err.Error(),
+	}
+}
+
+
+func GenerateBaseResponseWithValidationError(result any, success bool, resultCode int, err error) *BaseHelperResponse {
+	return &BaseHelperResponse{
+		Result: result,
+		Success: success,
+		ResultCode: resultCode,
+		ValidationErrors: validation.GetValidationErrors(err),
+	}
+}
