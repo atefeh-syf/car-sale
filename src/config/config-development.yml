@@ -24,3 +24,4 @@ redis:
   writeTimeout: 5
   poolSize: 10
   poolTimeout: 15
+  idleCheckFrequency: 500
