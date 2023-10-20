@@ -2,7 +2,7 @@ package helper
 import (
 	validation "github.com/atefeh-syf/car-sale/api/validations"
 )
-type BaseHelperResponse struct {
+type BaseHttpResponse struct {
 	Result any `json:"result"`
 	Success bool `json:"success"`
 	ResultCode int `json:"resultCode"`
@@ -10,8 +10,8 @@ type BaseHelperResponse struct {
 	Error any `json:"error"`
 }
 
-func GenerateBaseResponse(result any, success bool, resultCode int) *BaseHelperResponse {
-	return &BaseHelperResponse{
+func GenerateBaseResponse(result any, success bool, resultCode int) *BaseHttpResponse {
+	return &BaseHttpResponse{
 		Result: result,
 		Success: success,
 		ResultCode: resultCode,
@@ -19,8 +19,8 @@ func GenerateBaseResponse(result any, success bool, resultCode int) *BaseHelperR
 }
 
 
-func GenerateBaseResponseWithError(result any, success bool, resultCode int, err error) *BaseHelperResponse {
-	return &BaseHelperResponse{
+func GenerateBaseResponseWithError(result any, success bool, resultCode int, err error) *BaseHttpResponse {
+	return &BaseHttpResponse{
 		Result: result,
 		Success: success,
 		ResultCode: resultCode,
@@ -29,8 +29,8 @@ func GenerateBaseResponseWithError(result any, success bool, resultCode int, err
 }
 
 
-func GenerateBaseResponseWithValidationError(result any, success bool, resultCode int, err error) *BaseHelperResponse {
-	return &BaseHelperResponse{
+func GenerateBaseResponseWithValidationError(result any, success bool, resultCode int, err error) *BaseHttpResponse {
+	return &BaseHttpResponse{
 		Result: result,
 		Success: success,
 		ResultCode: resultCode,

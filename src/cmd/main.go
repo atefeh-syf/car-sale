@@ -9,6 +9,10 @@ import (
 	"github.com/atefeh-syf/car-sale/data/db"
 )
 
+// @securityDefinitions.apiKey AuthBearer
+// @in header
+// @name Authorization
+
 func main() {
 	cfg := config.GetConfig()
 

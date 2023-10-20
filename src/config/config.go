@@ -21,25 +21,25 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	InternalPort string
-	ExternalPort string
-	RunMode      string
+	InternalPort    string
+	ExternalPort    string
+	RunMode string
 }
 
 type LoggerConfig struct {
 	FilePath string
 	Encoding string
 	Level    string
-	//	Logger   string
+	Logger   string
 }
 
 type PostgresConfig struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	DbName   string
-	SSLMode  string
+	Host            string
+	Port            string
+	User            string
+	Password        string
+	DbName          string
+	SSLMode         string
 	MaxIdleConns    int
 	MaxOpenConns    int
 	ConnMaxLifetime time.Duration
@@ -93,10 +93,10 @@ func GetConfig() *Config {
 
 	cfg, err := ParseConfig(v)
 	envPort := os.Getenv("PORT")
-	if envPort != "" {
+	if envPort != ""{
 		cfg.Server.ExternalPort = envPort
 		log.Printf("Set external port from environment -> %s", cfg.Server.ExternalPort)
-	} else {
+	}else{
 		cfg.Server.ExternalPort = cfg.Server.InternalPort
 		log.Printf("Set external port from environment -> %s", cfg.Server.ExternalPort)
 	}
