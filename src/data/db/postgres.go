@@ -2,15 +2,16 @@ package db
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/atefeh-syf/car-sale/config"
+	"github.com/atefeh-syf/car-sale/pkg/logging"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var dbClient *gorm.DB
+var logger = logging.NewLogger(config.GetConfig())
 
 func InitDb(cfg *config.Config)  error{
 	cnn := fmt.Sprintf("host=%s port=%s  user=%s  password=%s dbname=%s sslmode=%s TimeZone=Asia/tehran", 
@@ -30,7 +31,7 @@ func InitDb(cfg *config.Config)  error{
 	sqlDb.SetMaxOpenConns(cfg.Postgres.MaxOpenConns)
 	sqlDb.SetConnMaxLifetime(cfg.Postgres.ConnMaxLifetime * time.Minute)
 
-	log.Println("DB Connection  established")
+	logger.Info(logging.Postgres, logging.StartUp, "DB Connection  established", nil)
 	return nil
 }
 

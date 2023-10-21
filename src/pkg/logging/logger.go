@@ -22,7 +22,7 @@ type Logger interface {
 }
 
 func NewLogger(cfg *config.Config) Logger {
-	return NewZapLogger(cfg)
+	return newZapLogger(cfg)
 }
 
 // file <- filebeat -> elasticsearch -> kibana

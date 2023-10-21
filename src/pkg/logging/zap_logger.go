@@ -19,7 +19,7 @@ type ZapLogger struct {
 	Logger *zap.SugaredLogger
 }
 
-func NewZapLogger(cfg *config.Config) *ZapLogger {
+func newZapLogger(cfg *config.Config) *ZapLogger {
 	logger := &ZapLogger{cfg:  cfg}
 	logger.Init()
 	return logger
