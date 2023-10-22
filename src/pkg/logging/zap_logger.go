@@ -14,6 +14,7 @@ var LogLevelMap = map[string] zapcore.Level {
 	"error": zapcore.ErrorLevel,
 	"fatal": zapcore.FatalLevel,
 }
+var zapSinLogger *zap.SugaredLogger
 type ZapLogger struct {
 	cfg *config.Config
 	Logger *zap.SugaredLogger
@@ -34,26 +35,28 @@ func (l *ZapLogger) getLogLevel() zapcore.Level {
 }
 
 func (l *ZapLogger) Init() {
-	w := zapcore.AddSync(&lumberjack.Logger{
-		Filename:  l.cfg.Logger.FilePath,
-		MaxSize: 1,
-		MaxAge: 5,
-		LocalTime: true,
-		MaxBackups: 10,
-		Compress: true,
+	once.Do(func() {
+		w := zapcore.AddSync(&lumberjack.Logger{
+			Filename:  l.cfg.Logger.FilePath,
+			MaxSize: 1,
+			MaxAge: 5,
+			LocalTime: true,
+			MaxBackups: 10,
+			Compress: true,
+		})
+		config := zap.NewProductionEncoderConfig()
+		config.EncodeTime = zapcore.ISO8601TimeEncoder
+
+		core := zapcore.NewCore(
+			zapcore.NewJSONEncoder(config),
+			w,
+			l.getLogLevel(),
+		)
+
+		Logger := zap.New(core,  zap.AddCaller() , zap.AddCallerSkip(1), zap.AddStacktrace(zapcore.ErrorLevel)).Sugar()
+		zapSinLogger = Logger.With("AppName", "MyApp", "LoggerName", "zap")
 	})
-	config := zap.NewProductionEncoderConfig()
-	config.EncodeTime = zapcore.ISO8601TimeEncoder
-
-	core := zapcore.NewCore(
-		zapcore.NewJSONEncoder(config),
-		w,
-		l.getLogLevel(),
-	)
-
-	Logger := zap.New(core,  zap.AddCaller() , zap.AddCallerSkip(1), zap.AddStacktrace(zapcore.ErrorLevel)).Sugar()
-	Logger = Logger.With("AppName", "MyApp", "LoggerName", "zap")
-	l.Logger  = Logger
+	l.Logger  = zapSinLogger
 }
 
 func (l *ZapLogger) Debug(cat Category, sub SubCategory, msg string, extra map[ExtraKey]interface{}) {

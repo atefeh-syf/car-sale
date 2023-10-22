@@ -2,11 +2,15 @@ package logging
 
 import (
 	"os"
+	"sync"
 
 	"github.com/atefeh-syf/car-sale/config"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/pkgerrors"
 )
+
+var once sync.Once
+var zeroSinLogger *zerolog.Logger 
 
 type zeroLogger struct {
 	cfg *config.Config
@@ -36,20 +40,25 @@ func (l *zeroLogger) getLogLevel () zerolog.Level {
 }
 
 func (l *zeroLogger) Init() {
-	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
+	once.Do(func() {
 
-	file , err := os.OpenFile(l.cfg.Logger.FilePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
-	if err != nil {
-		panic("could not open file")		
-	}
-	var logger = zerolog.New(file).
-								With().
-								Timestamp().
-								Str("AppName", "MyApp").
-								Str("LoggerName", "Zerolog").
-								Logger()
-	zerolog.SetGlobalLevel(l.getLogLevel())
-	l.Logger = &logger
+		zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
+
+		file , err := os.OpenFile(l.cfg.Logger.FilePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
+		if err != nil {
+			panic("could not open file")		
+		}
+		var logger = zerolog.New(file).
+									With().
+									Timestamp().
+									Str("AppName", "MyApp").
+									Str("LoggerName", "Zerolog").
+									Logger()
+
+		zerolog.SetGlobalLevel(l.getLogLevel())
+		zeroSinLogger = &logger
+	})
+	l.Logger = zeroSinLogger
 }
 
 
