@@ -52,6 +52,7 @@ func (l *ZapLogger) Init() {
 	)
 
 	Logger := zap.New(core,  zap.AddCaller() , zap.AddCallerSkip(1), zap.AddStacktrace(zapcore.ErrorLevel)).Sugar()
+	Logger = Logger.With("AppName", "MyApp", "LoggerName", "zap")
 	l.Logger  = Logger
 }
 
