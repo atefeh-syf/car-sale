@@ -5,6 +5,7 @@ import (
 	"github.com/atefeh-syf/car-sale/config"
 	"github.com/atefeh-syf/car-sale/data/cache"
 	"github.com/atefeh-syf/car-sale/data/db"
+	"github.com/atefeh-syf/car-sale/data/db/migrations"
 	"github.com/atefeh-syf/car-sale/pkg/logging"
 )
 
@@ -27,7 +28,7 @@ func main() {
 	if err != nil {
 		logger.Fatal(logging.Postgres, logging.StartUp, err.Error(), nil)
 	}
-
+	migrations.Up_1()
 
 	api.InitServer(cfg)
 }
