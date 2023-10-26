@@ -47,5 +47,8 @@ const (
 	Path ExtraKey = "Path"
 	Latency ExtraKey = "Latency"
 	Body ExtraKey = "Body"
+	TimeStamp ExtraKey = "TimeStamp"
 	ErrorMessage ExtraKey = "ErrorMessage"
+	RequestBody ExtraKey = "RequestBody"
+	ResponseBody ExtraKey = "ResponseBody"
 )

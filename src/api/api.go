@@ -23,6 +23,7 @@ func InitServer(cfg *config.Config) {
 	RegisterValidator()
 
 	r.Use(middlewares.Cors(cfg))
+	r.Use(middlewares.DefaultStructuredLogger(cfg))
 	r.Use(gin.Logger()/*middlewares.TestMiddleware()*/, middlewares.LimitByRequest())
 
 	RegisterRoutes(r)
