@@ -15,8 +15,8 @@ type BaseModel struct {
 	DeletedAt sql.NullTime `gorm:"type:Timestamp with time zone;null"`
 
 	CreatedBy int `gorm:"not null"`
-	ModifiedBy *sql.NullInt64 `gorm:"not null"`
-	DeletedBy  *sql.NullInt64  `gorm:"not null"`
+	ModifiedBy *sql.NullInt64 `gorm:"null"`
+	DeletedBy  *sql.NullInt64  `gorm:"null"`
 }
 
 func (m *BaseModel) BeforeCreate(tx *gorm.DB) (err error) {
