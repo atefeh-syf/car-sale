@@ -1,7 +1,6 @@
 package services
 
 import (
-	"go/token"
 	"time"
 
 	"github.com/atefeh-syf/car-sale/api/dto"
