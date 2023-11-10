@@ -24,7 +24,7 @@ func InitServer(cfg *config.Config) {
 
 	r.Use(middlewares.Cors(cfg))
 	r.Use(middlewares.DefaultStructuredLogger(cfg))
-	r.Use(gin.Logger()/*middlewares.TestMiddleware()*/, middlewares.LimitByRequest())
+	r.Use(gin.Logger(), gin.CustomRecovery(middlewares.ErrorHandler) /*middlewares.TestMiddleware()*/, middlewares.LimitByRequest())
 
 	RegisterRoutes(r, cfg)
 	RegisterSwagger(r, cfg)
