@@ -14,4 +14,7 @@ const (
 	//User
 	EmailExists = "Email exists"
 	UsernameExists = "Username exists"
+
+	// DB
+	RecordNotFound = "Record not found"
 )
