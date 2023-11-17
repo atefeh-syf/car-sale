@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "Launch Package",
+            "type": "go",
+            "goExecPath": "/usr/local/go/bin/go",
+            "buildParams": [
+                "$USER_HOME$/Desktop/car-sale/src/cmd/main.go",
+            ]
+        }
+    ]
+}

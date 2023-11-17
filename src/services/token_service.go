@@ -5,6 +5,7 @@ import (
 
 	"github.com/atefeh-syf/car-sale/api/dto"
 	"github.com/atefeh-syf/car-sale/config"
+	"github.com/atefeh-syf/car-sale/constants"
 	"github.com/atefeh-syf/car-sale/pkg/logging"
 	"github.com/atefeh-syf/car-sale/pkg/service_errors"
 	"github.com/golang-jwt/jwt"
@@ -39,30 +40,34 @@ func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetail, error) 
 	td.RefreshTokenExpireTime = time.Now().Add(s.cfg.JWT.RefreshTokenExpireDuration * time.Minute).Unix()
 
 	atc := jwt.MapClaims{}
-	atc["user_id"] = token.UserId
-	atc["first_name"] = token.FirstName
-	atc["last_name"] = token.LastName
-	atc["username"] = token.Username
-	atc["email"] = token.Email
-	atc["mobile_number"] = token.MobileNumber
-	atc["roles"] = token.Roles
-	atc["exp"] = td.AccessTokenExpireTime
 
-	ac := jwt.NewWithClaims(jwt.SigningMethodES256,  atc)
+	atc[constants.UserIdKey] = token.UserId
+	atc[constants.FirstNameKey] = token.FirstName
+	atc[constants.LastNameKey] = token.LastName
+	atc[constants.UsernameKey] = token.Username
+	atc[constants.EmailKey] = token.Email
+	atc[constants.MobileNumberKey] = token.MobileNumber
+	atc[constants.RolesKey] = token.Roles
+	atc[constants.ExpireTimeKey] = td.AccessTokenExpireTime
+
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atc)
 
 	var err error
-	td.AccessToken, err = ac.SignedString([]byte(s.cfg.JWT.Secret))
+	td.AccessToken, err = at.SignedString([]byte(s.cfg.JWT.Secret))
 
 	if err != nil {
 		return nil, err
 	}
 
 	rtc := jwt.MapClaims{}
-	atc["user_id"] = token.UserId
-	atc["exp"] = td.RefreshTokenExpireTime
 
-	rt := jwt.NewWithClaims(jwt.SigningMethodES256, rtc)
-	td.RefreshToken , err = rt.SignedString([]byte(s.cfg.JWT.RefreshSecret))
+	rtc[constants.UserIdKey] = token.UserId
+	rtc[constants.ExpireTimeKey] = td.RefreshTokenExpireTime
+
+	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtc)
+
+	td.RefreshToken, err = rt.SignedString([]byte(s.cfg.JWT.RefreshSecret))
+
 	if err != nil {
 		return nil, err
 	}

@@ -197,7 +197,7 @@ func (s *UserService) LoginByUsername(req  *dto.LoginByUsernameRequest) (*dto.To
 		return nil, err
 	}
 
-	tdto := tokenDto{UserId: user.Id, FirstName: user.FirstName, LastName: user.LastName, Email: user.Email, MobileNumber: user.MobileNumber}
+	tdto := tokenDto{UserId: user.Id, FirstName: user.FirstName, LastName: user.LastName, Email: user.Email, MobileNumber: user.MobileNumber, Username: user.Username}
 	if len(*user.UserRole) > 0 {
 		for _, ur := range *user.UserRole {
 			tdto.Roles = append(tdto.Roles, ur.Role.Name)
