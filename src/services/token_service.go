@@ -13,26 +13,26 @@ import (
 
 type TokenService struct {
 	logger logging.Logger
-	cfg *config.Config
+	cfg    *config.Config
 }
 
 type tokenDto struct {
-	UserId int
-	FirstName string
-	LastName string
-	Username string
+	UserId       int
+	FirstName    string
+	LastName     string
+	Username     string
 	MobileNumber string
-	Email string
-	Roles []string
+	Email        string
+	Roles        []string
 }
 
 func NewTokenService(cfg *config.Config) *TokenService {
 	logger := logging.NewLogger(cfg)
 	return &TokenService{
 		logger: logger,
-		cfg: cfg,
+		cfg:    cfg,
 	}
-}	
+}
 
 func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetail, error) {
 	td := &dto.TokenDetail{}
@@ -92,12 +92,12 @@ func (s *TokenService) VerifyToken(token string) (*jwt.Token, error) {
 func (s *TokenService) GetClaims(token string) (claimMap map[string]interface{}, err error) {
 	claimMap = map[string]interface{}{}
 
-	verifyToken , err := s.VerifyToken(token)
+	verifyToken, err := s.VerifyToken(token)
 	if err != nil {
 		return nil, err
 	}
-	 
-	claims , ok := verifyToken.Claims.(jwt.MapClaims)
+
+	claims, ok := verifyToken.Claims.(jwt.MapClaims)
 	if ok && verifyToken.Valid {
 		for k, v := range claims {
 			claimMap[k] = v
