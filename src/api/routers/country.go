@@ -6,12 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Country  (router *gin.RouterGroup, cfg *config.Config){
+func Country(router *gin.RouterGroup, cfg *config.Config) {
 	h := handlers.NewCountryHandler(cfg)
 
-	router.POST("/",  h.Create)
-	router.PUT("/:id",  h.Update)
-	router.DELETE("/:id",  h.Delete)
-	router.GET("/:id",  h.GetById)
+	router.POST("/", h.Create)
+	router.PUT("/:id", h.Update)
+	router.DELETE("/:id", h.Delete)
+	router.GET("/:id", h.GetById)
+	router.POST("/get-by-filter", h.GetByFilter)
 
 }

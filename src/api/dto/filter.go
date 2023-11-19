@@ -1,16 +1,15 @@
 package dto
 
 type Sort struct {
-	ColId string `json:"col_id"`
+	ColId string `json:"colId"`
 	Sort  string `json:"sort"`
 }
 
 type Filter struct {
-	// contains notContains equals
+	// contains notContains equals notEqual startsWith lessThan lessThanOrEqual greaterThan greaterThanOrEqual inRange endsWith
 	Type string `json:"type"`
 	From string `json:"from"`
 	To   string `json:"to"`
-
 	// text number
 	FilterType string `json:"filterType"`
 }
@@ -20,18 +19,18 @@ type DynamicFilter struct {
 	Filter map[string]Filter `json:"filter"`
 }
 
-type PageList[T any] struct {
-	PageNumber      int  `json:"page_number"`
-	TotalRows       int  `json:"total_rows"`
-	TotalPages      int  `json:"total_pages"`
-	HasPreviousPage bool `json:"has_previous_page"`
-	HasNextPage     bool `json:"has_next_page"`
-	Items           *[]T `json:"items"`
+type PagedList[T any] struct {
+	PageNumber      int   `json:"pageNumber"`
+	TotalRows       int64 `json:"totalRows"`
+	TotalPages      int   `json:"totalPages"`
+	HasPreviousPage bool  `json:"hasPreviousPage"`
+	HasNextPage     bool  `json:"hasNextPage"`
+	Items           *[]T  `json:"items"`
 }
 
 type PaginationInput struct {
-	PageSize   int `json:"page_size"`
-	PageNumber int `json:"page_number"`
+	PageSize   int `json:"pageSize"`
+	PageNumber int `json:"pageNumber"`
 }
 
 type PaginationInputWithFilter struct {
@@ -40,7 +39,7 @@ type PaginationInputWithFilter struct {
 }
 
 func (p *PaginationInputWithFilter) GetOffset() int {
-	// 2, 10 => 11 -20
+	// 2 , 10 => 11-20
 	return (p.GetPageNumber() - 1) * p.GetPageSize()
 }
 

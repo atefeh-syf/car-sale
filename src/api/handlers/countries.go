@@ -17,7 +17,7 @@ type CountryHandler struct {
 
 func NewCountryHandler(cfg *config.Config) *CountryHandler {
 	return &CountryHandler{
-		service:  services.NewCountryService(cfg),
+		service: services.NewCountryService(cfg),
 	}
 }
 
@@ -33,8 +33,8 @@ func (h *CountryHandler) Create(c *gin.Context) {
 	res, err := h.service.Create(c, &req)
 	if err != nil {
 		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
-			helper.GenerateBaseResponseWithError(nil, false, -1, err) )
-			return
+			helper.GenerateBaseResponseWithError(nil, false, -1, err))
+		return
 	}
 	c.JSON(http.StatusCreated, helper.GenerateBaseResponse(res, true, 0))
 }
@@ -52,8 +52,8 @@ func (h *CountryHandler) Update(c *gin.Context) {
 	res, err := h.service.Update(c, id, &req)
 	if err != nil {
 		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
-			helper.GenerateBaseResponseWithError(nil, false, -1, err) )
-			return
+			helper.GenerateBaseResponseWithError(nil, false, -1, err))
+		return
 	}
 	c.JSON(http.StatusOK, helper.GenerateBaseResponse(res, true, 0))
 }
@@ -69,8 +69,8 @@ func (h *CountryHandler) Delete(c *gin.Context) {
 	err := h.service.Delete(c, id)
 	if err != nil {
 		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
-			helper.GenerateBaseResponseWithError(nil, false, -1, err) )
-			return
+			helper.GenerateBaseResponseWithError(nil, false, -1, err))
+		return
 	}
 	c.JSON(http.StatusOK, helper.GenerateBaseResponse(nil, true, 0))
 }
@@ -86,8 +86,26 @@ func (h *CountryHandler) GetById(c *gin.Context) {
 	res, err := h.service.GetById(c, id)
 	if err != nil {
 		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
-			helper.GenerateBaseResponseWithError(nil, false, -1, err) )
-			return
+			helper.GenerateBaseResponseWithError(nil, false, -1, err))
+		return
 	}
 	c.JSON(http.StatusOK, helper.GenerateBaseResponse(res, true, 0))
+}
+
+func (h *CountryHandler) GetByFilter(c *gin.Context) {
+	req := dto.PaginationInputWithFilter{}
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest,
+			helper.GenerateBaseResponseWithValidationError(nil, false, 121, err))
+		return
+	}
+
+	res, err := h.service.GetByFiler(c, &req)
+	if err != nil {
+		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
+			helper.GenerateBaseResponseWithError(nil, false, -1, err))
+		return
+	}
+	c.JSON(http.StatusCreated, helper.GenerateBaseResponse(res, true, 0))
 }
