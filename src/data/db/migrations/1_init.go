@@ -237,48 +237,48 @@ func createProperty(database *gorm.DB, cat string) {
 	if count > 0 || catModel.Id == 0 {
 		return
 	}
-	//var props *[]models.Property
-	//switch cat {
-	//case "Body":
-	//	props = getBodyProperties(catModel.Id)
-	//
-	//case "Engine":
-	//	props = getEngineProperties(catModel.Id)
-	//
-	//case "Drivetrain":
-	//	props = getDrivetrainProperties(catModel.Id)
-	//
-	//case "Suspension":
-	//	props = getSuspensionProperties(catModel.Id)
-	//
-	//case "Comfort":
-	//	props = getComfortProperties(catModel.Id)
-	//
-	//case "Driver support systems":
-	//	props = getDriverSupportSystemProperties(catModel.Id)
-	//
-	//case "Lights":
-	//	props = getLightsProperties(catModel.Id)
-	//
-	//case "Multimedia":
-	//	props = getMultimediaProperties(catModel.Id)
-	//
-	//case "Safety equipment":
-	//	props = getSafetyEquipmentProperties(catModel.Id)
-	//
-	//case "Seats and steering wheel":
-	//	props = getSeatsProperties(catModel.Id)
-	//
-	//case "Windows and mirrors":
-	//	props = getWindowsProperties(catModel.Id)
-	//
-	//default:
-	//	props = &([]models.Property{})
-	//}
-	//
-	//for _, prop := range *props {
-	//	database.Create(&prop)
-	//}
+	var props *[]models.Property
+	switch cat {
+	case "Body":
+		props = getBodyProperties(catModel.Id)
+
+	case "Engine":
+		props = getEngineProperties(catModel.Id)
+
+	case "Drivetrain":
+		props = getDrivetrainProperties(catModel.Id)
+
+	case "Suspension":
+		props = getSuspensionProperties(catModel.Id)
+
+	case "Comfort":
+		props = getComfortProperties(catModel.Id)
+
+	case "Driver support systems":
+		props = getDriverSupportSystemProperties(catModel.Id)
+
+	case "Lights":
+		props = getLightsProperties(catModel.Id)
+
+	case "Multimedia":
+		props = getMultimediaProperties(catModel.Id)
+
+	case "Safety equipment":
+		props = getSafetyEquipmentProperties(catModel.Id)
+
+	case "Seats and steering wheel":
+		props = getSeatsProperties(catModel.Id)
+
+	case "Windows and mirrors":
+		props = getWindowsProperties(catModel.Id)
+
+	default:
+		props = &([]models.Property{})
+	}
+
+	for _, prop := range *props {
+		database.Create(&prop)
+	}
 }
 
 func createCarType(database *gorm.DB) {
