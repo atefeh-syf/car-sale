@@ -57,24 +57,58 @@ func RegisterRoutes(r *gin.Engine, cfg *config.Config) {
 
 	v1 := api.Group("/v1")
 	{
+		// Test
 		health := v1.Group("/health")
-		test_router := v1.Group("/test")
-		users_router := v1.Group("/users")
-		countries_router := v1.Group("/countries", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
-		cities_router := v1.Group("/cities", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
-		files_router := v1.Group("/cities", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
-		property_categories_router := v1.Group("/property-categories", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
-		properties_router := v1.Group("/properties", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		test_router := v1.Group("/test" /*middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"})*/)
 
+		// User
+		users := v1.Group("/users")
+
+		// Base
+		countries := v1.Group("/countries", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		cities := v1.Group("/cities", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		files := v1.Group("/files", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		companies := v1.Group("/companies", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+
+		// Property
+		properties := v1.Group("/properties", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		propertyCategories := v1.Group("/property-categories", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+
+		// Car
+		carTypes := v1.Group("/car-types", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		gearboxes := v1.Group("/gearboxes", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+
+		// Test
 		routers.Health(health)
 		routers.TestRouter(test_router)
-		routers.User(users_router, cfg)
-		routers.Country(countries_router, cfg)
-		routers.City(cities_router, cfg)
-		routers.File(files_router, cfg)
-		routers.Property(properties_router, cfg)
-		routers.PropertyCategory(property_categories_router, cfg)
+
+		// User
+		routers.User(users, cfg)
+
+		// Base
+		routers.Country(countries, cfg)
+		routers.City(cities, cfg)
+		routers.File(files, cfg)
+		routers.Company(companies, cfg)
+
+		// Property
+		routers.Property(properties, cfg)
+		routers.PropertyCategory(propertyCategories, cfg)
+
+		// Car
+		routers.CarType(carTypes, cfg)
+		routers.Gearbox(gearboxes, cfg)
+
+		r.Static("/static", "./uploads")
+
 	}
+
+	v2 := api.Group("/v2")
+	{
+		health := v2.Group("/health")
+		routers.Health(health)
+	}
+
 }
 
 func RegisterSwagger(r *gin.Engine, cfg *config.Config) {

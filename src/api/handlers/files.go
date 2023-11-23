@@ -19,8 +19,6 @@ import (
 	"strings"
 )
 
-var logger = logging.NewLogger(config.GetConfig())
-
 type FileHandler struct {
 	service *services.FileService
 }
@@ -33,16 +31,17 @@ func NewFileHandler(cfg *config.Config) *FileHandler {
 
 func (h *FileHandler) Create(c *gin.Context) {
 	upload := dto.UploadFileRequest{}
-	err := c.ShouldBind(upload)
+	err := c.ShouldBind(&upload)
 	if err != nil {
-		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
-			helper.GenerateBaseResponseWithError(nil, false, helper.ValidationError, err))
+		c.AbortWithStatusJSON(http.StatusBadRequest,
+			helper.GenerateBaseResponseWithValidationError(nil, false, helper.ValidationError, err))
 		return
 	}
 	req := dto.CreateFileRequest{}
 	req.Description = upload.Description
 	req.MimeType = upload.File.Header.Get("Content-Type")
 	req.Directory = "uploads"
+	req.Name, err = saveUploadFile(upload.File, req.Directory)
 	if err != nil {
 		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
 			helper.GenerateBaseResponseWithError(nil, false, helper.InternalError, err))
@@ -56,35 +55,7 @@ func (h *FileHandler) Create(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, helper.GenerateBaseResponse(res, true, helper.Success))
-}
 
-func saveUploadFile(file *multipart.FileHeader, directory string) (string, error) {
-	randFileName := uuid.New()
-	err := os.MkdirAll(directory, os.ModePerm)
-	if err != nil {
-		return "", err
-	}
-	fileName := file.Filename
-	fileNameArr := strings.Split(fileName, ".")
-	fileExt := fileNameArr[len(fileNameArr)-1]
-	fileName = fmt.Sprintf("%s.%s", randFileName, fileExt)
-	dst := fmt.Sprintf("%s/%s", directory, fileName)
-	src, err := file.Open()
-	if err != nil {
-		return "", err
-	}
-	defer src.Close()
-
-	out, err := os.Create(dst)
-	if err != nil {
-		return "", err
-	}
-	defer out.Close()
-	_, err = io.Copy(out, src)
-	if err != nil {
-		return "", err
-	}
-	return fileName, nil
 }
 
 func (h *FileHandler) Update(c *gin.Context) {
@@ -98,7 +69,6 @@ func (h *FileHandler) Delete(c *gin.Context) {
 			helper.GenerateBaseResponse(nil, false, helper.ValidationError))
 		return
 	}
-
 	file, err := h.service.GetById(c, id)
 	if err != nil {
 		logger.Error(logging.Io, logging.RemoveFile, err.Error(), nil)
@@ -113,7 +83,6 @@ func (h *FileHandler) Delete(c *gin.Context) {
 			helper.GenerateBaseResponse(nil, false, helper.InternalError))
 		return
 	}
-
 	err = h.service.Delete(c, id)
 	if err != nil {
 		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
@@ -129,4 +98,36 @@ func (h *FileHandler) GetById(c *gin.Context) {
 
 func (h *FileHandler) GetByFilter(c *gin.Context) {
 	GetByFilter(c, h.service.GetByFiler)
+}
+
+func saveUploadFile(file *multipart.FileHeader, directory string) (string, error) {
+	// test.txt -> 95239855629856.txt
+	randFileName := uuid.New()
+	err := os.MkdirAll(directory, os.ModePerm)
+	if err != nil {
+		return "", err
+	}
+	fileName := file.Filename
+	fileNameArr := strings.Split(fileName, ".")
+	fileExt := fileNameArr[len(fileNameArr)-1]
+	fileName = fmt.Sprintf("%s.%s", randFileName, fileExt)
+	dst := fmt.Sprintf("%s/%s", directory, fileName)
+
+	src, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer src.Close()
+
+	out, err := os.Create(dst)
+	if err != nil {
+		return "", err
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, src)
+	if err != nil {
+		return "", err
+	}
+	return fileName, nil
 }

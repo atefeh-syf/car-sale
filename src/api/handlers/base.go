@@ -3,12 +3,14 @@ package handlers
 import (
 	"context"
 	"github.com/atefeh-syf/car-sale/api/helper"
+	"github.com/atefeh-syf/car-sale/config"
+	"github.com/atefeh-syf/car-sale/pkg/logging"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 )
 
-//var logger = logging.NewLogger(config.GetConfig())
+var logger = logging.NewLogger(config.GetConfig())
 
 func Create[Ti any, To any](c *gin.Context, caller func(ctx context.Context, req *Ti) (*To, error)) {
 	req := new(Ti)
