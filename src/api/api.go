@@ -49,17 +49,19 @@ func RegisterRoutes(r *gin.Engine, cfg *config.Config) {
 		test_router := v1.Group("/test")
 		users_router := v1.Group("/users")
 		countries_router := v1.Group("/countries", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		cities_router := v1.Group("/cities", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
 
 		routers.Health(health)
 		routers.TestRouter(test_router)
 		routers.User(users_router, cfg)
 		routers.Country(countries_router, cfg)
+		routers.City(cities_router, cfg)
 	}
 }
 
-func RegisterSwagger (r *gin.Engine, cfg *config.Config) {
+func RegisterSwagger(r *gin.Engine, cfg *config.Config) {
 	docs.SwaggerInfo.Title = "golang car sale api"
-	docs.SwaggerInfo.Description =  "golang car sale api"
+	docs.SwaggerInfo.Description = "golang car sale api"
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.BasePath = "/api"
 	docs.SwaggerInfo.Host = fmt.Sprint("localhost:%s", cfg.Server.InternalPort)
