@@ -13,11 +13,11 @@ func LimitByRequest() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		err := tollbooth.LimitByRequest(lmt, ctx.Writer, ctx.Request)
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusTooManyRequests, helper.GenerateBaseResponseWithError(nil, false,  -100, err))
+			ctx.AbortWithStatusJSON(http.StatusTooManyRequests, helper.GenerateBaseResponseWithError(nil, false, helper.LimiterError, err))
 			return
 		} else {
 			ctx.Next()
 		}
-		
+
 	}
 }

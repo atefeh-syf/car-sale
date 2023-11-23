@@ -1,11 +1,8 @@
 package handlers
 
 import (
-	"net/http"
-	"strconv"
-
-	"github.com/atefeh-syf/car-sale/api/dto"
-	"github.com/atefeh-syf/car-sale/api/helper"
+	_ "github.com/atefeh-syf/car-sale/api/dto"
+	_ "github.com/atefeh-syf/car-sale/api/helper"
 	"github.com/atefeh-syf/car-sale/config"
 	"github.com/atefeh-syf/car-sale/services"
 	"github.com/gin-gonic/gin"
@@ -22,90 +19,21 @@ func NewCountryHandler(cfg *config.Config) *CountryHandler {
 }
 
 func (h *CountryHandler) Create(c *gin.Context) {
-	req := dto.CreateUpdateCountryRequest{}
-	err := c.ShouldBindJSON(&req)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest,
-			helper.GenerateBaseResponseWithValidationError(nil, false, 121, err))
-		return
-	}
-
-	res, err := h.service.Create(c, &req)
-	if err != nil {
-		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
-			helper.GenerateBaseResponseWithError(nil, false, -1, err))
-		return
-	}
-	c.JSON(http.StatusCreated, helper.GenerateBaseResponse(res, true, 0))
+	Create(c, h.service.Create)
 }
 
 func (h *CountryHandler) Update(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Params.ByName("id"))
-	req := dto.CreateUpdateCountryRequest{}
-	err := c.ShouldBindJSON(&req)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest,
-			helper.GenerateBaseResponseWithValidationError(nil, false, 121, err))
-		return
-	}
-
-	res, err := h.service.Update(c, id, &req)
-	if err != nil {
-		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
-			helper.GenerateBaseResponseWithError(nil, false, -1, err))
-		return
-	}
-	c.JSON(http.StatusOK, helper.GenerateBaseResponse(res, true, 0))
+	Update(c, h.service.Update)
 }
 
 func (h *CountryHandler) Delete(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Params.ByName("id"))
-	if id == 0 {
-		c.AbortWithStatusJSON(http.StatusNotFound,
-			helper.GenerateBaseResponse(nil, false, 121))
-		return
-	}
-
-	err := h.service.Delete(c, id)
-	if err != nil {
-		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
-			helper.GenerateBaseResponseWithError(nil, false, -1, err))
-		return
-	}
-	c.JSON(http.StatusOK, helper.GenerateBaseResponse(nil, true, 0))
+	Delete(c, h.service.Delete)
 }
 
 func (h *CountryHandler) GetById(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Params.ByName("id"))
-	if id == 0 {
-		c.AbortWithStatusJSON(http.StatusNotFound,
-			helper.GenerateBaseResponse(nil, false, 121))
-		return
-	}
-
-	res, err := h.service.GetById(c, id)
-	if err != nil {
-		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
-			helper.GenerateBaseResponseWithError(nil, false, -1, err))
-		return
-	}
-	c.JSON(http.StatusOK, helper.GenerateBaseResponse(res, true, 0))
+	GetById(c, h.service.GetById)
 }
 
 func (h *CountryHandler) GetByFilter(c *gin.Context) {
-	req := dto.PaginationInputWithFilter{}
-	err := c.ShouldBindJSON(&req)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest,
-			helper.GenerateBaseResponseWithValidationError(nil, false, 121, err))
-		return
-	}
-
-	res, err := h.service.GetByFiler(c, &req)
-	if err != nil {
-		c.AbortWithStatusJSON(helper.TranslateErrorToStatusCode(err),
-			helper.GenerateBaseResponseWithError(nil, false, -1, err))
-		return
-	}
-	c.JSON(http.StatusCreated, helper.GenerateBaseResponse(res, true, 0))
+	GetByFilter(c, h.service.GetByFiler)
 }
