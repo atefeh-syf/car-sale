@@ -50,12 +50,14 @@ func RegisterRoutes(r *gin.Engine, cfg *config.Config) {
 		users_router := v1.Group("/users")
 		countries_router := v1.Group("/countries", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
 		cities_router := v1.Group("/cities", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		files_router := v1.Group("/cities", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
 
 		routers.Health(health)
 		routers.TestRouter(test_router)
 		routers.User(users_router, cfg)
 		routers.Country(countries_router, cfg)
 		routers.City(cities_router, cfg)
+		routers.File(files_router, cfg)
 	}
 }
 
