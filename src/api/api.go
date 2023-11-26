@@ -70,7 +70,7 @@ func RegisterRoutes(r *gin.Engine, cfg *config.Config) {
 		files := v1.Group("/files", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
 		companies := v1.Group("/companies", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
 		colors := v1.Group("/colors", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
-		carModelColors := v1.Group("/car-model-colors", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		years := v1.Group("/years", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
 
 		// Property
 		properties := v1.Group("/properties", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
@@ -80,6 +80,8 @@ func RegisterRoutes(r *gin.Engine, cfg *config.Config) {
 		carTypes := v1.Group("/car-types", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
 		gearboxes := v1.Group("/gearboxes", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
 		carModels := v1.Group("/car-models", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		carModelColors := v1.Group("/car-model-colors", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
+		carModelYears := v1.Group("/car-model-years", middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"}))
 
 		// Test
 		routers.Health(health)
@@ -94,7 +96,7 @@ func RegisterRoutes(r *gin.Engine, cfg *config.Config) {
 		routers.File(files, cfg)
 		routers.Company(companies, cfg)
 		routers.Color(colors, cfg)
-		routers.CarModelColor(carModelColors, cfg)
+		routers.Year(years, cfg)
 
 		// Property
 		routers.Property(properties, cfg)
@@ -104,6 +106,8 @@ func RegisterRoutes(r *gin.Engine, cfg *config.Config) {
 		routers.CarType(carTypes, cfg)
 		routers.Gearbox(gearboxes, cfg)
 		routers.CarModel(carModels, cfg)
+		routers.CarModelColor(carModelColors, cfg)
+		routers.CarModelYear(carModelYears, cfg)
 
 		r.Static("/static", "./uploads")
 
